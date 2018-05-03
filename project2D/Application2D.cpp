@@ -2,17 +2,22 @@
 #include "Texture.h"
 #include "Font.h"
 #include "Input.h"
+#include "Enemy.h"
+#include "Bullet.h"
 #include <assert.h>
 
-Application2D::Application2D() {
+Application2D::Application2D() 
+{
 
 }
 
-Application2D::~Application2D() {
+Application2D::~Application2D() 
+{
 
 }
 
-bool Application2D::startup() {
+bool Application2D::startup() 
+{
 	
 	m_2dRenderer = new aie::Renderer2D();
 
@@ -38,7 +43,8 @@ bool Application2D::startup() {
 	return true;
 }
 
-void Application2D::shutdown() {
+void Application2D::shutdown() 
+{
 	
 	delete m_Bullet;
 	delete m_GridTexture;
@@ -48,7 +54,8 @@ void Application2D::shutdown() {
 	delete m_2dRenderer;
 }
 
-void Application2D::update(float deltaTime) {
+void Application2D::update(float deltaTime) 
+{
 
 	m_timer += deltaTime;
 
@@ -69,27 +76,31 @@ void Application2D::update(float deltaTime) {
 	//if (input->isKeyDown(aie::INPUT_KEY_RIGHT))
 	//	m_cameraX += 500.0f * deltaTime;
 
+	// Increments score by 1 everytime the 'E' key is pressed
 	if (input->wasKeyPressed(aie::INPUT_KEY_E))
 		AddPoints();
 
+	// Checks if the space key was pressed, spawns bullet and sets hasFired to true
 	if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
 	{
 		m_BulletX = m_shipX;
 		m_BulletY = m_shipY;
 		hasFired = true;
 	}
+
+	// Moves the ship upward
 	if (input->isKeyDown(aie::INPUT_KEY_W))
 		m_shipY += 800.0f * deltaTime;
-	
+	// Moves the ship downward
 	if (input->isKeyDown(aie::INPUT_KEY_S))
 		m_shipY -= 800.0f * deltaTime;
-
+	// Moves the ship left
 	if (input->isKeyDown(aie::INPUT_KEY_A))
 		m_shipX -= 800.0f * deltaTime; 
-
+	// Moves the ship right
 	if (input->isKeyDown(aie::INPUT_KEY_D))
 		m_shipX += 800.0f * deltaTime;
-
+	// Moves the bullet upward when hasFired is set to true
 	if (hasFired == true)
 	{
 		m_BulletY += 1200.0f * deltaTime;
@@ -100,7 +111,8 @@ void Application2D::update(float deltaTime) {
 		quit();
 }
 
-void Application2D::draw() {
+void Application2D::draw() 
+{
 
 	// wipe the screen to the background colour
 	clearScreen();
@@ -148,13 +160,13 @@ void Application2D::draw() {
 	sprintf_s(Score, 50, "Score: %i", Points);
 	m_2dRenderer->drawText(m_font, Score, m_cameraX + 0,m_cameraY + 720 - 64); 
 
-	// Draw Enemy
+	// Draws Enemies
 	m_2dRenderer->drawSprite(m_Enemy, 1000, 360, 150, 100, 4.75);
 	m_2dRenderer->drawSprite(m_Enemy, 650, 675, 150, 100, 4.75);
 	m_2dRenderer->drawSprite(m_Enemy, 500, 440, 150, 100, 4.75);
 	m_2dRenderer->drawSprite(m_Enemy, 200 , 550, 150, 100, 4.75);
 
-	// Draw Bullet
+	// Draws Bullet
 	if (hasFired == true)
 	{
 		m_2dRenderer->drawSprite(m_Bullet, m_BulletX, m_BulletY, 30, 45);
@@ -165,7 +177,7 @@ void Application2D::draw() {
 
 }
 
-// Function to add points when space is pressed
+// Function to increment points by 1 when called
 void Application2D::AddPoints()
 {
 	Points++;
