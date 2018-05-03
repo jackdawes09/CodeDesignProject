@@ -27,9 +27,10 @@ protected:
 	aie::Texture*       m_Bullet;
 	aie::Texture*       m_Enemy;
 
-
+	float m_BulletX, m_BulletY;
+	bool hasFired;
 	float m_cameraX, m_cameraY;
 	float m_timer;
 	int Points = 0;
-
+	float m_shipX, m_shipY;
 };

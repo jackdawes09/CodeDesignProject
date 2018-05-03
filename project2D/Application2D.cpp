@@ -2,6 +2,7 @@
 #include "Texture.h"
 #include "Font.h"
 #include "Input.h"
+#include <assert.h>
 
 Application2D::Application2D() {
 
@@ -23,9 +24,16 @@ bool Application2D::startup() {
 
 	m_font = new aie::Font("./font/consolas.ttf", 32);
 	
+
 	m_cameraX = 0;
 	m_cameraY = 0;
+	m_shipX = 650;
+	m_shipY = 75;
+	m_BulletX = m_shipX;
+	m_BulletY = m_shipY;
 	m_timer = 0;
+
+	hasFired = false;
 
 	return true;
 }
@@ -46,24 +54,46 @@ void Application2D::update(float deltaTime) {
 
 	// input example
 	aie::Input* input = aie::Input::getInstance();
+	assert(input);
 
 	// use arrow keys to move camera
-	if (input->isKeyDown(aie::INPUT_KEY_UP))
-		m_cameraY += 500.0f * deltaTime;
+	//if (input->isKeyDown(aie::INPUT_KEY_UP))
+	//	m_cameraY += 500.0f * deltaTime;
+	//
+	//if (input->isKeyDown(aie::INPUT_KEY_DOWN))
+	//	m_cameraY -= 500.0f * deltaTime;
+	//
+	//if (input->isKeyDown(aie::INPUT_KEY_LEFT))
+	//	m_cameraX -= 500.0f * deltaTime;
+	//
+	//if (input->isKeyDown(aie::INPUT_KEY_RIGHT))
+	//	m_cameraX += 500.0f * deltaTime;
 
-	if (input->isKeyDown(aie::INPUT_KEY_DOWN))
-		m_cameraY -= 500.0f * deltaTime;
-
-	if (input->isKeyDown(aie::INPUT_KEY_LEFT))
-		m_cameraX -= 500.0f * deltaTime;
-
-	if (input->isKeyDown(aie::INPUT_KEY_RIGHT))
-		m_cameraX += 500.0f * deltaTime;
+	if (input->wasKeyPressed(aie::INPUT_KEY_E))
+		AddPoints();
 
 	if (input->wasKeyPressed(aie::INPUT_KEY_SPACE))
-		AddPoints();
-		
+	{
+		m_BulletX = m_shipX;
+		m_BulletY = m_shipY;
+		hasFired = true;
+	}
+	if (input->isKeyDown(aie::INPUT_KEY_W))
+		m_shipY += 800.0f * deltaTime;
+	
+	if (input->isKeyDown(aie::INPUT_KEY_S))
+		m_shipY -= 800.0f * deltaTime;
 
+	if (input->isKeyDown(aie::INPUT_KEY_A))
+		m_shipX -= 800.0f * deltaTime; 
+
+	if (input->isKeyDown(aie::INPUT_KEY_D))
+		m_shipX += 800.0f * deltaTime;
+
+	if (hasFired == true)
+	{
+		m_BulletY += 1200.0f * deltaTime;
+	}
 
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
@@ -90,7 +120,7 @@ void Application2D::draw() {
 
 	// demonstrate spinning sprite
 	//m_2dRenderer->setUVRect(0,0,1,1);
-	m_2dRenderer->drawSprite(m_shipTexture, m_cameraX + 600, m_cameraY + 100);
+	m_2dRenderer->drawSprite(m_shipTexture, m_shipX, m_shipY);
 
 	// draw a thin line
 	//m_2dRenderer->drawLine(300, 300, 600, 400, 2, 1);
@@ -119,10 +149,16 @@ void Application2D::draw() {
 	m_2dRenderer->drawText(m_font, Score, m_cameraX + 0,m_cameraY + 720 - 64); 
 
 	// Draw Enemy
-	m_2dRenderer->drawSprite(m_Enemy, 700, 360, 150, 100);
+	m_2dRenderer->drawSprite(m_Enemy, 1000, 360, 150, 100, 4.75);
+	m_2dRenderer->drawSprite(m_Enemy, 650, 675, 150, 100, 4.75);
+	m_2dRenderer->drawSprite(m_Enemy, 500, 440, 150, 100, 4.75);
+	m_2dRenderer->drawSprite(m_Enemy, 200 , 550, 150, 100, 4.75);
 
 	// Draw Bullet
-	//m_2dRenderer->drawSprite(m_Bullet, 650, 340);
+	if (hasFired == true)
+	{
+		m_2dRenderer->drawSprite(m_Bullet, m_BulletX, m_BulletY, 30, 45);
+	}
 
 	// done drawing sprites
 	m_2dRenderer->end();
