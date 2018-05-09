@@ -118,7 +118,12 @@ void Application2D::draw()
 	clearScreen();
 	
 	assert(m_2dRenderer);
-	
+	assert(m_GridTexture);
+	assert(m_shipTexture);
+	assert(m_Enemy);
+	assert(m_Bullet);
+
+
 	// set the camera position before we begin rendering
 	m_2dRenderer->setCameraPos(m_cameraX, m_cameraY);
 	
