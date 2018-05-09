@@ -6,6 +6,7 @@
 #include "Bullet.h"
 #include <assert.h>
 
+
 Application2D::Application2D() 
 {
 
@@ -16,7 +17,7 @@ Application2D::~Application2D()
 
 }
 
-bool Application2D::startup() 
+bool Application2D::startup()
 {
 	
 	m_2dRenderer = new aie::Renderer2D();
@@ -113,18 +114,20 @@ void Application2D::update(float deltaTime)
 
 void Application2D::draw() 
 {
-
 	// wipe the screen to the background colour
 	clearScreen();
-
+	
+	assert(m_2dRenderer);
+	
 	// set the camera position before we begin rendering
 	m_2dRenderer->setCameraPos(m_cameraX, m_cameraY);
-
+	
 	// begin drawing sprites
 	m_2dRenderer->begin();
-
+	
 	// Create the Background
 	m_2dRenderer->drawSprite(m_GridTexture, m_cameraX + 640, m_cameraY + 360 , 1280, 720);
+	
 
 	// demonstrate animation
 	//m_2dRenderer->setUVRect(int(m_timer) % 8 / 8.0f, 0, 1.f / 8, 1.f / 8);
@@ -133,6 +136,7 @@ void Application2D::draw()
 	// demonstrate spinning sprite
 	//m_2dRenderer->setUVRect(0,0,1,1);
 	m_2dRenderer->drawSprite(m_shipTexture, m_shipX, m_shipY);
+	
 
 	// draw a thin line
 	//m_2dRenderer->drawLine(300, 300, 600, 400, 2, 1);
@@ -154,11 +158,13 @@ void Application2D::draw()
 	//sprintf_s(fps, 32, "FPS: %i", getFPS());
 	//m_2dRenderer->drawText(m_font, fps, 0, 720 - 32);
 	m_2dRenderer->drawText(m_font, "Press ESC to quit!", m_cameraX + 0, m_cameraY + 720 - 32);
+	
 
 	// Output a score
 	char Score[50];
 	sprintf_s(Score, 50, "Score: %i", Points);
 	m_2dRenderer->drawText(m_font, Score, m_cameraX + 0,m_cameraY + 720 - 64); 
+	
 
 	// Draws Enemies
 	m_2dRenderer->drawSprite(m_Enemy, 1000, 360, 150, 100, 4.75);
